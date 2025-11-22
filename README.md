@@ -3,6 +3,13 @@ Movie Recommendation System
 A Streamlit app that recommends movies similar to your favorite titles using Item-Based Collaborative Filtering (KNN).
 This project demonstrates a full end-to-end Machine Learning workflow: data preprocessing, sparse matrix creation, model training, and real-time movie recommendations.
 
+📚 Academic Project Info
+Course: Data Science Technologies (CS4135)
+Supervisor: Sir Muhammad Abdul Jabbar
+Student: Abd-ul-ala Taha
+Dataset: MovieLens Ratings Dataset
+Model: Item-Based Collaborative Filtering (KNN)
+
 🌐 [Open in Streamlit](https://cinemarecomendation.streamlit.app/)
 
 ⚠️ Note: If the app is not sleeping, it will open immediately. On first run, the pretrained models and datasets are automatically downloaded from Google Drive.
@@ -10,29 +17,19 @@ This project demonstrates a full end-to-end Machine Learning workflow: data prep
 🌟 Features
 
 Search for a movie and get top recommendations based on user ratings
-
 Displays movie title, genres, and similarity scores
-
 Configurable number of recommendations
-
 Clean, responsive Streamlit UI
-
 Auto-downloads required datasets and models from Google Drive
-
 Academic project description included in-app
 
 🛠 Technologies Used
 
 Python 3.11
-
 Streamlit
-
 Pandas, NumPy
-
 Scikit-learn (KNN)
-
 Pickle / gdown for model loading
-
 Sparse matrices for efficient computation
 
 🚀 Run the App Locally
@@ -42,16 +39,13 @@ Clone the repository
 git clone https://github.com/alachaudhary/MovieRecomendationEngine.git
 cd MovieRecomendationEngine
 
-
 Install dependencies
 
 pip install -r requirements.txt
 
-
 Run the Streamlit app
 
 streamlit run streamlit_app.py
-
 
 Open your browser
 The app will be available at http://localhost:8501
@@ -76,17 +70,6 @@ When you enter a movie title, it finds the closest matches based on user ratings
 
 Recommends the top N similar movies along with similarity scores.
 
-📚 Academic Project Info
-
-Course: Data Science Technologies (CS4135)
-
-Supervisor: Sir Muhammad Abdul Jabbar
-
-Student: Abd-ul-ala Taha
-
-Dataset: MovieLens Ratings Dataset
-
-Model: Item-Based Collaborative Filtering (KNN)
 
 📌 Notes
 
