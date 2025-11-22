@@ -5,8 +5,10 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pickle
 from pathlib import Path
+import pickle
+import gdown
+
 
 try:
     from sklearn.neighbors import NearestNeighbors
@@ -46,7 +48,6 @@ st.markdown("""
 # ============================================================================ 
 # LOAD MODELS (with auto-download from Google Drive)
 # ============================================================================ 
-import gdown  # pip install gdown
 
 @st.cache_resource
 def load_models():
@@ -63,14 +64,14 @@ def load_models():
         "ratings_processed.csv": "https://drive.google.com/uc?id=1URBhoGbZSZd7q5ZEfQ_EaUE8o3wsVm7e"
     }
 
-    # Download files if missing
+   # Download missing files
     for filename, url in files_to_download.items():
         file_path = model_dir / filename
-        if not file_path.exists():
+        if not file_path.exists() or file_path.stat().st_size == 0:
             st.info(f"Downloading {filename}...")
             gdown.download(url, str(file_path), quiet=False)
 
-    # Load models
+    # Load models safely
     with open(model_dir / "knn_model.pkl", "rb") as f:
         knn = pickle.load(f)
     with open(model_dir / "movie_to_idx.pkl", "rb") as f:
@@ -81,6 +82,7 @@ def load_models():
         sparse_matrix = pickle.load(f)
 
     movies = pd.read_csv(model_dir / "movies_processed.csv")
+    
     return knn, movie_to_idx, user_to_idx, sparse_matrix, movies
 
 
