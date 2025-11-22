@@ -54,7 +54,6 @@ def load_models():
     model_dir = Path("models")
     model_dir.mkdir(exist_ok=True)
 
-    # Map of local filenames → Google Drive shareable URLs
     files_to_download = {
         "knn_model.pkl": "https://drive.google.com/uc?id=1-Eu1-tS8knPEpbycDClEe-o3D5WIXUyx",
         "movie_to_idx.pkl": "https://drive.google.com/uc?id=14zpPD906VkCVmv-FY97yVRI4VYtyzTDN",
@@ -64,25 +63,38 @@ def load_models():
         "ratings_processed.csv": "https://drive.google.com/uc?id=1URBhoGbZSZd7q5ZEfQ_EaUE8o3wsVm7e"
     }
 
-   # Download missing files
     for filename, url in files_to_download.items():
         file_path = model_dir / filename
+        # Download only if missing or empty
         if not file_path.exists() or file_path.stat().st_size == 0:
             st.info(f"Downloading {filename}...")
-            gdown.download(url, str(file_path), quiet=False)
+            output = gdown.download(url, str(file_path), quiet=False)
+            if not output or Path(output).stat().st_size == 0:
+                st.error(f"Failed to download {filename}. Please check the URL or network.")
+                return None, None, None, None, None
 
-    # Load models safely
-    with open(model_dir / "knn_model.pkl", "rb") as f:
-        knn = pickle.load(f)
-    with open(model_dir / "movie_to_idx.pkl", "rb") as f:
-        movie_to_idx = pickle.load(f)
-    with open(model_dir / "user_to_idx.pkl", "rb") as f:
-        user_to_idx = pickle.load(f)
-    with open(model_dir / "sparse_matrix.pkl", "rb") as f:
-        sparse_matrix = pickle.load(f)
+    # Load pickles safely
+    def safe_load_pickle(path):
+        try:
+            with open(path, "rb") as f:
+                return pickle.load(f)
+        except Exception as e:
+            st.error(f"Error loading {path.name}: {e}")
+            return None
 
-    movies = pd.read_csv(model_dir / "movies_processed.csv")
+    knn = safe_load_pickle(model_dir / "knn_model.pkl")
+    movie_to_idx = safe_load_pickle(model_dir / "movie_to_idx.pkl")
+    user_to_idx = safe_load_pickle(model_dir / "user_to_idx.pkl")
+    sparse_matrix = safe_load_pickle(model_dir / "sparse_matrix.pkl")
     
+    # Load movies CSV
+    movies_path = model_dir / "movies_processed.csv"
+    if movies_path.exists() and movies_path.stat().st_size > 0:
+        movies = pd.read_csv(movies_path)
+    else:
+        st.error(f"{movies_path.name} is missing or empty!")
+        movies = None
+
     return knn, movie_to_idx, user_to_idx, sparse_matrix, movies
 
 
